@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      database: ecom
+      host: 127.0.0.1
+      port: 21017
+
+logging:
+  level:
+    web: debug
+server:
+  port: 5009
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env, beans"
