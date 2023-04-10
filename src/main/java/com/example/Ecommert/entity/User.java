@@ -8,7 +8,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,16 +27,21 @@ import java.util.Date;
 @Document(collection = "user")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class User {
+public class User implements Persistable<String> {
    @Id
    private String id;
    @Length(min = 2, message = "user name must have at least 4 characters") @NotBlank(message ="user name is required!")
    private String name;
    @Email(message = "please provide a valid email") @NotBlank(message ="user email is required!")
+   @Indexed(unique = true)
    private String email;
 
    @Length(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
    private String password;
+
+   @Transient
+   @Length(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
+   private String confirmPassword;
 
    private String phone_number;
 
@@ -49,9 +58,16 @@ public class User {
 
    @Indexed
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-   private Date createdAt;
+   @CreatedDate
+   private Date createdAt = new Date();
 
    @Indexed
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-   private Date updatedAt;
+   @LastModifiedDate
+   private Date updatedAt = new Date();
+
+   @Override
+   public boolean isNew() {
+      return false;
+   }
 }

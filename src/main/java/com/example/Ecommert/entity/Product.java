@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "product")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Product {
+public class Product implements Persistable<String> {
    @Id
    private String id;
 
@@ -42,8 +45,15 @@ public class Product {
 
    @Indexed
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-   private Date createdAt;
+   @CreatedDate
+   private Date createdAt = new Date();
 
-   private Date updatedAt;
+   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+   @LastModifiedDate
+   private Date updatedAt = new Date();
 
+   @Override
+   public boolean isNew() {
+      return false;
+   }
 }

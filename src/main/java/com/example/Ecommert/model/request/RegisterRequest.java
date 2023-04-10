@@ -1,5 +1,6 @@
 package com.example.Ecommert.model.request;
 
+import com.example.Ecommert.entity.User;
 import com.example.Ecommert.utils.ValidPassword;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,5 @@ public class RegisterRequest {
    private String password;
 
    @Size(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
-
    private String confirmPassword;
 }

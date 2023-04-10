@@ -1,18 +1,17 @@
 package com.example.Ecommert.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class LoginRequest {
-   @Email
+   @NotBlank(message = "email is required") @Email @NonNull
    private String email;
+   @NonNull @NotBlank(message = "password is required")
    private String password;
 }

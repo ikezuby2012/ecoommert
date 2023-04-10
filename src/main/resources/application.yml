@@ -1,9 +1,9 @@
 spring:
   data:
     mongodb:
-      database: ecom
+      database: ecommert
       host: 127.0.0.1
-      port: 21017
+      port: 27017
 
 logging:
   level:
