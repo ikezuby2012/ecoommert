@@ -1,6 +1,7 @@
 package com.example.Ecommert.entity;
 
 import com.example.Ecommert.model.Role;
+import com.example.Ecommert.utils.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -27,21 +29,24 @@ import java.util.Date;
 @Document(collection = "user")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class User implements Persistable<String> {
+@ValidPassword
+public class User {
    @Id
    private String id;
    @Length(min = 2, message = "user name must have at least 4 characters") @NotBlank(message ="user name is required!")
    private String name;
-   @Email(message = "please provide a valid email") @NotBlank(message ="user email is required!")
+
    @Indexed(unique = true)
+   @Email(message = "please provide a valid email") @NotBlank(message ="user email is required!")
    private String email;
 
+   @JsonIgnore
    @Length(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
    private String password;
 
-   @Transient
-   @Length(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
-   private String confirmPassword;
+//   @Transient
+//   @Length(min = 8, message = "password must have at least 8 character!") @NotBlank(message ="user password is required!")
+//   private String confirmPassword;
 
    private String phone_number;
 
@@ -54,20 +59,13 @@ public class User implements Persistable<String> {
    @JsonIgnore
    private boolean active = true;
 
-   private Data passwordChangedAt;
+   private Date passwordChangedAt;
 
    @Indexed
-   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
    @CreatedDate
-   private Date createdAt = new Date();
+   private Instant createdAt;
 
    @Indexed
-   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
    @LastModifiedDate
-   private Date updatedAt = new Date();
-
-   @Override
-   public boolean isNew() {
-      return false;
-   }
+   private Instant updatedAt;
 }

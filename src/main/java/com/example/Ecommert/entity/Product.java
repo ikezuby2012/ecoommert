@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
 import javax.validation.constraints.NotBlank;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "product")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Product implements Persistable<String> {
+public class Product {
    @Id
    private String id;
 
@@ -43,17 +44,9 @@ public class Product implements Persistable<String> {
    @Length(min = 1,max = 5, message = "rating must be less than 5 or more than 1")
    private double ratingAverage;
 
-   @Indexed
-   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
    @CreatedDate
-   private Date createdAt = new Date();
+   private Instant createdAt;
 
-   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
    @LastModifiedDate
-   private Date updatedAt = new Date();
-
-   @Override
-   public boolean isNew() {
-      return false;
-   }
+   private Instant updatedAt;
 }
