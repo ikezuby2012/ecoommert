@@ -1,6 +1,8 @@
 package com.example.Ecommert.config;
 
 import com.example.Ecommert.filter.CustomAuthFilter;
+import com.example.Ecommert.filter.CustomJWTFilter;
+import com.example.Ecommert.model.Role;
 import com.example.Ecommert.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    private UserRepository userRepository;
    @Autowired
    private BCryptPasswordEncoder bCryptPasswordEncoder;
+   @Autowired
+   private CustomJWTFilter customJWTFilter;
 
    @Override
    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,11 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       CustomAuthFilter customAuthFilter = new CustomAuthFilter(authenticationManagerBean(), userRepository);
       customAuthFilter.setFilterProcessesUrl("/api/v1/auth/login");
       http.csrf().disable();
-      http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/product").authenticated();
+      http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/product").hasAuthority(Role.ADMIN.toString());
       http.authorizeRequests().antMatchers("/api/v1/auth/**", "/api/v1/product/**").permitAll();
       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //      http.addFilterAt(new CustomAuthFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
       http.addFilter(customAuthFilter);
+      http.addFilterBefore(customJWTFilter, UsernamePasswordAuthenticationFilter.class);
    }
    @Bean
    @Autowired

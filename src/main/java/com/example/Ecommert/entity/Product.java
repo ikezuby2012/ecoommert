@@ -5,13 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
 import javax.validation.constraints.NotBlank;
@@ -44,9 +42,12 @@ public class Product {
    @Length(min = 1,max = 5, message = "rating must be less than 5 or more than 1")
    private double ratingAverage;
 
+   @CreatedBy
+   private String Creator;
+
    @CreatedDate
-   private Instant createdAt;
+   private Date createdAt;
 
    @LastModifiedDate
-   private Instant updatedAt;
+   private Date updatedAt;
 }

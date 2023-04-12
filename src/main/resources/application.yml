@@ -5,6 +5,8 @@ spring:
       host: 127.0.0.1
       port: 27017
       auto-index-creation: true
+  main:
+    allow-bean-definition-overriding: true
 
 logging:
   level:
